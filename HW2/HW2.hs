@@ -70,10 +70,13 @@ data Cmd2 = LD2 Int
           | ADD2
           | MULT2
           | DUP2
+          | DEF String [Cmd]
+          | CALL String
           deriving Show
 
 -- (b)
 type Macros = [(String,Prog)]
+type State = (Stack,Macros)
 
 -- (c)
 -- sem2 :: Prog -> D
