@@ -4,7 +4,8 @@
 
 module HW2 where
 
-import SVG (ppLines)
+--import SVG (ppLines)
+import SVG
 import Data.Maybe
 import Data.List
 import System.IO
@@ -135,8 +136,8 @@ data Mode = Up | Down
           deriving Show
 
 type State2 = (Mode,Int,Int)
-type Line = (Int,Int,Int,Int)
-type Lines = [Line]
+--type Line = (Int,Int,Int,Int)
+--type Lines = [Line]
 
 semS :: Cmd3 -> State2 -> (State2,Lines)
 semS (Pen Up) (Up,e,f) = ((Up,e,f),[])
@@ -146,4 +147,29 @@ semS (Pen Up) (Down,e,f) = ((Down,e,f),[])
 semS (MoveTo e f) (Down,g,h) = ((Down,e,f),(g,h,e,f):[])
 semS (MoveTo e f) (Up,g,h) = ((Up,e,f),[])
 
--- sem' :: Lcmd -> Lines
+semS' :: Cmd3 -> Lines
+semS' (Seq (MoveTo a b) (MoveTo c d)) = [(a,b,c,d)]
+
+--sem' :: Cmd3 -> Lines
+
+a = Seq (MoveTo 0 0) (MoveTo 5 5)
+b = ppLines (semS' a)
+
+--ppLines :: Lines -> IO ()
+--ppLines ls = do h <- openFile "Minilogo.svg" WriteMode
+--                hPutStr h (svgHdr++concatMap ppLines ls++svgFtr)
+--                hClose h
+
+--factor = 100
+--yMax = 1100
+
+--svgHdr = "<?xml version=\"1.0\" standalone=\"no\"?>\n \
+--         \ <!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n \
+--         \    \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n \
+--         \ <svg width=\"12cm\" height=\"11cm\" viewBox=\"0 0 1200 1100\"\n \
+--         \    xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n \
+--         \ <title>Mini Logo Result Viewer</title>\n \
+--         \ <desc>A set of line segments</desc>\n \
+--         \ <rect x=\"10\" y=\"10\" width=\"1180\" height=\"1080\" \
+--         \       fill=\"none\" stroke=\"red\" /> "
+--svgFtr = "</svg>\n"
