@@ -136,21 +136,18 @@ data Mode = Up | Down
           deriving Show
 
 type State2 = (Mode,Int,Int)
---type Line = (Int,Int,Int,Int)
---type Lines = [Line]
 
 semS :: Cmd3 -> State2 -> (State2,Lines)
 semS (Seq a b) s0 = (s1,l1++l2)
-                  where s1 = fst(semS b (fst(semS a s0)))
-                        l1 = snd(semS a s0)
-                        l2 = snd(semS b (fst(semS a s0)))
+                    where s1 = fst(semS b (fst(semS a s0)))
+                          l1 = snd(semS a s0)
+                          l2 = snd(semS b (fst(semS a s0)))
 semS (Pen Up) (Up,e,f) = ((Up,e,f),[])
 semS (Pen Down) (Up,e,f) = ((Down,e,f),[])
 semS (Pen Down) (Down,e,f) = ((Down,e,f),[])
 semS (Pen Up) (Down,e,f) = ((Up,e,f),[])
 semS (MoveTo e f) (Down,g,h) = ((Down,e,f),[(g,h,e,f)])
 semS (MoveTo e f) (Up,g,h) = ((Up,e,f),[])
-
 
 sem' :: Cmd3 -> Lines
 sem' a = snd(semS a (Down,0,0))
