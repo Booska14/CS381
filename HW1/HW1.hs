@@ -9,9 +9,9 @@ module HW1 where
 data Cmd = Pen Mode
          | MoveTo Pos Pos
          | Def String Pars Cmd
-         | Call String Vals
-         | Cmd_List Cmd Cmd
-         | Noop
+         | Call Name Vals
+         | CmdList Cmd Cmd
+         | Empty
          deriving Show
 
 data Name = Name String
@@ -23,7 +23,7 @@ data Number = Number Int Int
 data Mode = Up | Down
           deriving Show
 
-data Pos = P Int Int | S Name
+data Pos = P Int Int | Nx Name
          deriving Show
 
 data Pars = PP Name Pars | PS String
@@ -36,26 +36,26 @@ data Vals = VP Number Vals | VS Number
 vector = Def "vector" (PS "par1") (MoveTo (P 1 2) (P 1 3))
 
 -- (c)
---steps :: Int -> Cmd
---steps 0 = Empty
---steps 1 = (CmdList
---        (Pen Down)
---        (CmdList                
---                (MoveTo (P 0 0) (P 0 1))
---                (CmdList
---                        (MoveTo (P 0 1) (P 1 1))
---                        (Pen Up)
---                        )))
---steps n = (CmdList
---        (Pen Down)
---        (CmdList
---                (MoveTo (P (n-1) (n-1)) (P (n-1) n))
---                (CmdList
---                        (MoveTo (P (n-1) n) (P n n))
---                        (CmdList
---                                (Pen Up)
---                                (steps (n - 1))
---                                ))))
+steps :: Int -> Cmd
+steps 0 = Empty
+steps 1 = (CmdList
+        (Pen Down)
+        (CmdList                
+                (MoveTo (P 0 0) (P 0 1))
+                (CmdList
+                        (MoveTo (P 0 1) (P 1 1))
+                        (Pen Up)
+                        )))
+steps n = (CmdList
+        (Pen Down)
+        (CmdList
+                (MoveTo (P (n-1) (n-1)) (P (n-1) n))
+                (CmdList
+                        (MoveTo (P (n-1) n) (P n n))
+                        (CmdList
+                                (Pen Up)
+                                (steps (n - 1))
+                                ))))
 
 
 
