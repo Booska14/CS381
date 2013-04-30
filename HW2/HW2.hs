@@ -140,36 +140,35 @@ type State2 = (Mode,Int,Int)
 --type Lines = [Line]
 
 semS :: Cmd3 -> State2 -> (State2,Lines)
+semS (Seq a b) s0 = (s1,l1++l2)
+                  where s1 = fst(semS b (fst(semS a s0)))
+                        l1 = snd(semS a s0)
+                        l2 = snd(semS b (fst(semS a s0)))
 semS (Pen Up) (Up,e,f) = ((Up,e,f),[])
 semS (Pen Down) (Up,e,f) = ((Down,e,f),[])
 semS (Pen Down) (Down,e,f) = ((Down,e,f),[])
-semS (Pen Up) (Down,e,f) = ((Down,e,f),[])
-semS (MoveTo e f) (Down,g,h) = ((Down,e,f),(g,h,e,f):[])
+semS (Pen Up) (Down,e,f) = ((Up,e,f),[])
+semS (MoveTo e f) (Down,g,h) = ((Down,e,f),[(g,h,e,f)])
 semS (MoveTo e f) (Up,g,h) = ((Up,e,f),[])
 
-semS' :: Cmd3 -> Lines
-semS' (Seq (MoveTo a b) (MoveTo c d)) = [(a,b,c,d)]
 
---sem' :: Cmd3 -> Lines
+sem' :: Cmd3 -> Lines
+sem' a = snd(semS a (Down,0,0))
 
-a = Seq (MoveTo 0 0) (MoveTo 5 5)
-b = ppLines (semS' a)
+--states
+s30 = (Up,0,0)
+s31 = (Down,0,0)
 
---ppLines :: Lines -> IO ()
---ppLines ls = do h <- openFile "Minilogo.svg" WriteMode
---                hPutStr h (svgHdr++concatMap ppLines ls++svgFtr)
---                hClose h
+--commands
+c1 :: Cmd3
+c1 = Seq (MoveTo 3 4) (MoveTo 5 5)
+c2 = MoveTo 3 4
+c3 = Pen Up
+c4 = Seq c2 c3
+c5 = Seq (Seq (MoveTo 3 4) (MoveTo 5 6)) (MoveTo 7 8)
 
---factor = 100
---yMax = 1100
-
---svgHdr = "<?xml version=\"1.0\" standalone=\"no\"?>\n \
---         \ <!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n \
---         \    \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n \
---         \ <svg width=\"12cm\" height=\"11cm\" viewBox=\"0 0 1200 1100\"\n \
---         \    xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n \
---         \ <title>Mini Logo Result Viewer</title>\n \
---         \ <desc>A set of line segments</desc>\n \
---         \ <rect x=\"10\" y=\"10\" width=\"1180\" height=\"1080\" \
---         \       fill=\"none\" stroke=\"red\" /> "
---svgFtr = "</svg>\n"
+--tests
+t31 = semS c4 s31
+t32 = semS (Seq (Seq (MoveTo 3 4) (MoveTo 5 6)) (MoveTo 7 8)) s31
+t33 = sem' c5
+t34 = ppLines t33
