@@ -66,24 +66,63 @@ t3 = sem p1 s2
 
 -- Exercise 2
 -- (a)
+type Prog2 = [Cmd2]
+
 data Cmd2 = LD2 Int
           | ADD2
           | MULT2
           | DUP2
-          | DEF String [Cmd]
+          | DEF String [Cmd2]
           | CALL String
           deriving Show
 
 -- (b)
-type Macros = [(String,Prog)]
+type Macros = [(String,Prog2)]
 type State = (Stack,Macros)
 
 -- (c)
--- sem2 :: Prog -> D
+sem2 :: Prog2 -> State -> State
+sem2 [] a = a
+sem2 (o:os) b = sem2 os (semCmd2 o b)
 
+semCmd2 :: Cmd2 -> State -> State
+semCmd2 (LD2 e) (xs,m) = (xs ++ [e],m)
+semCmd2 ADD2 (xs,m) = (init(init xs) ++ [last xs + last(init xs)],m)
+semCmd2 MULT2 (xs,m) = (init(init xs) ++ [last xs * last(init xs)],m)
+semCmd2 DUP2 (xs,m) = (xs ++ [(last xs)],m)
+semCmd2 (DEF s cmds) (xs,ms) = (xs,ms ++ [(s,cmds)])
+semCmd2 (CALL s) (xs,m) = sem2 (findFoo s m) (xs,m)
 
--- semCmd2 :: Cmd -> D
+findIdx :: String -> Macros -> Maybe Int
+findIdx str macros_list = findIndex (\c -> fst c == str) macros_list
 
+retProg :: Maybe Int -> Macros -> Prog2
+retProg n macros_list = snd (macros_list !! fromJust(n))
+
+findFoo :: String -> Macros -> Prog2
+findFoo str ms = retProg (findIdx str ms) ms
+
+--stacks
+s21 = []
+s22 = [1,2,3,4]
+
+--programs
+p21 :: Prog2
+p21 = [LD2 3,DUP2,ADD2,DUP2,MULT2]
+p22 = [LD2 3,ADD2]
+p23 = []
+
+--macros
+m1 :: Macros
+m1 = [("mac1",p21),("mac2",p22)]
+
+--state
+st1 = (s22,m1)
+
+--tests
+t21 = semCmd2 (CALL "mac2") st1
+t22 = semCmd2 (CALL "doesn't_exist") st1
+t23 = semCmd2 (DEF "newMac" [LD2 99, LD2 22]) st1
 
 
 -- Exercise 3
@@ -95,11 +134,11 @@ data Cmd3 = Pen Mode
 data Mode = Up | Down
           deriving Show
 
-type State = (Mode,Int,Int)
+type State2 = (Mode,Int,Int)
 type Line = (Int,Int,Int,Int)
 type Lines = [Line]
 
-semS :: Cmd3 -> State -> (State,Lines)
+semS :: Cmd3 -> State2 -> (State2,Lines)
 semS (Pen Up) (Up,e,f) = ((Up,e,f),[])
 semS (Pen Down) (Up,e,f) = ((Down,e,f),[])
 semS (Pen Down) (Down,e,f) = ((Down,e,f),[])
