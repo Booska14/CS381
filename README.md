@@ -1,4 +1,4 @@
 CS381
 =====
 
-CS381 work
+CS381 homework
