@@ -8,6 +8,7 @@ module HW3 where
 
 -- Exercise 1
 type Prog = [Cmd]
+--type Stack = [Int]
 
 data Cmd = LD Int
          | ADD
@@ -22,8 +23,14 @@ data Cmd = LD Int
 type Rank = Int
 type CmdRank = (Int,Int)
 
---rankC :: Cmd -> CmdRank
-
+rankC :: Cmd -> CmdRank
+rankC (LD _) = (0,1)
+rankC ADD = (2,1)
+rankC MULT = (2,1)
+rankC DUP = (0,1)
+rankC INC = (1,1)
+rankC SWAP = (2,2)
+rankC (POP _) = (1,0)
 
 --rankP :: Prog -> Maybe Rank
 
