@@ -30,7 +30,7 @@ rankC MULT = (2,1)
 rankC DUP = (0,1)
 rankC INC = (1,1)
 rankC SWAP = (2,2)
-rankC (POP _) = (1,0)
+rankC (POP k) = (k,0)
 
 --rankP :: Prog -> Maybe Rank
 
