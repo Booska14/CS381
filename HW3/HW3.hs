@@ -10,7 +10,7 @@ import Unsafe.Coerce
 
 -- Exercise 1
 type Prog = [Cmd]
---type Stack = [Int]
+type Stack = [Int]
 
 data Cmd = LD Int
          | ADD
@@ -20,6 +20,8 @@ data Cmd = LD Int
          | SWAP
          | POP Int
          deriving Show
+
+type D = Stack -> Stack
 
 -- (a)
 type Rank = Int
@@ -60,9 +62,32 @@ t14 = rankP p14 --error
 
 
 -- (b)
---semStatTC :: 
+sem2 :: Prog -> D
+sem2 [] a = a
+sem2 (o:os) b = sem2 os (semCmd o b)
 
+semCmd :: Cmd -> D
+semCmd (LD e) xs = xs ++ [e]
+semCmd ADD xs = init(init xs) ++ [last xs + last(init xs)]
+semCmd MULT xs = init(init xs) ++ [last xs * last(init xs)]
+semCmd DUP xs = xs ++ [(last xs)]
+semCmd INC xs = init xs ++ [(last xs) + 1]
+semCmd SWAP xs = init(init xs) ++ [last xs] ++ [last(init xs)]
+semCmd (POP k) xs = take ((length xs) - k) xs
 
+semStatTC :: Prog -> Maybe Stack
+semStatTC p | rankP p == Nothing = Nothing
+            | otherwise = Just (sem2 p [])
+
+--tests
+t15 = semStatTC p11
+t16 = semStatTC p12
+
+{- Now that we have the type checking ahead of time (to insure the validity of the
+programs), it's not needed while determining the semantics. This means that the type of
+sem is now:
+"Prog -> Stack -> Stack" instead of "Prog -> Maybe Stack -> Maybe Stack"
+-}
 
 -- Exercise 2
 --data Shape = X
