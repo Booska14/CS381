@@ -135,8 +135,11 @@ g x y = if not (null x) then [] else [y]
     :t f = f :: [t] -> t -> [t]
     :t g = [a] -> a1 -> [a1]
 (2) Explain why the functions have these types.
+    The functions f and g have these types because having a generic function that can operate on any variable, we can make the function accept any valid arguments/variables. 
 (3) Which type is more general?
+    Type t is more general
 (4) Why do f and g have different types?
+    he types of functions f and g are different because they are instantiated in the same file, they cannot be of the same type which is why function f is of type t and function g is of type a and a1.
 -}
 
 -- (b)
