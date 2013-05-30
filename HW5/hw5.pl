@@ -20,18 +20,19 @@ enroll(john,381).
 enroll(jim,399).
 
 /* (A) */
-schedule(X,Y,Z) :- when(C,Z), where(C,Y), enroll(X,C).
+schedule(X,Y,Z) :- when(A,Z), where(A,Y), enroll(X,A).
 
 /* (B) */
-usage(X,Y) :- when(C,Y), where(C,X).
+usage(X,Y) :- when(A,Y), where(A,X).
 
 /* (C) */
-conflict(X,Y) :- where(X,Z), where(Y,Z), when(X,T), when(Y,T), X\=Y.
+conflict(X,Y) :- where(X,Z), where(Y,Z), when(X,A), when(Y,A), X\=Y.
 
 /* (D) */
-meet(X,Y) :- 
+meet(X,Y) :- enroll(X,Z), enroll(Y,Z), X\=Y.
+meet(X,Y) :- enroll(X,A), enroll(Y,B), where(A,C), where(B,C), when(A,D), when(B,E), D-E=:=1.
+meet(X,Y) :- enroll(X,A), enroll(Y,B), where(A,C), where(B,C), when(A,D), when(B,E), E-D=:=1.
 
 
 /* Exercise 2 */
-
 
