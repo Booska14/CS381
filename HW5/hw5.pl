@@ -1,3 +1,8 @@
+/*
+Conway Tang
+CS381
+Homework 5
+*/
 
 /* Exercise 1 */
 
@@ -36,3 +41,10 @@ meet(X,Y) :- enroll(X,A), enroll(Y,B), where(A,C), where(B,C), when(A,D), when(B
 
 /* Exercise 2 */
 
+/* (A) */
+
+
+/* (B) */
+
+
+/* (C) */
