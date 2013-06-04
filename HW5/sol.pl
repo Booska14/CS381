@@ -22,7 +22,7 @@ usage(R,T) :- where(X,R), when(X,T).
 conflict(X,Y) :- where(X,R) ,where(Y,R), when(X,T),when(Y,T),X\=Y.
 % define meet
 meet(X,Y) :- enroll(X,C), enroll(Y,C),X\=Y.
-meet(X,Y) :- enroll(X,C1), enroll(Y,C2), where(C1,R), where(C2,R), when(C1,T1), when(C2,T2), (T1 is T2+1;T2 is T1+1).
+meet(X,Y) :- enroll(X,C1), enroll(Y,C2), where(C1,R), where(C2,R), when(C1,T1), when(C2,T2), (T1 is T2+1;T2 is T1+1)./* Exercise 2 */
 % rdup
 rdup([],[]).
 rdup([X,X|Xs],Y) :- rdup([X|Xs],Y).
