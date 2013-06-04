@@ -47,15 +47,14 @@ rdup([H|T],Out) :- member(H,T), rdup(T,Out).
 rdup([H|T],[H|Out]) :- not(member(H,T)), rdup(T,Out).
 
 /* (B) */
-flat([],[]).
-flat([H|T],Out) :- flat(H,Out1), flat(T,Out2), append(Out1,Out2,Out).
+flat([],[]) :- !.
+flat([H|T],Out) :- !, flat(H,Out1), flat(T,Out2), append(Out1,Out2,Out).
 flat(H,[H]).
 
 /* (C) */
-project([],[],[]) :- !.
-project([H|T],[A|B],Out) :- H-1=\=0, decrement([H|T],X), project(X,B,Out).
+project([],_,[]) :- !.
+project([H|T],[_|B],Out) :- H-1=\=0, decrement([H|T],X), project(X,B,Out).
 project([H|T],[A|B],[A|Out]) :- H-1=:=0, decrement(T,X), project(X,B,Out).
-project([],In,[]).
 
 decrement([],[]) :- !.
 decrement([X|Y],[A|Out]) :- A is X-1, decrement(Y,Out).
